@@ -7,7 +7,7 @@ export function logUser(email, password) {
     //Je retourne un thunk pour pouvoir utiliser directement la fonction logUser dans mon composant signin et avoir à disposition le dispatch.
     
     return  (dispatch, getState) => {
-      const testFetch = fetch(`http://localhost:3001/api/v1/user/login`, {
+      fetch(`http://localhost:3001/api/v1/user/login`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -16,28 +16,25 @@ export function logUser(email, password) {
             body: JSON.stringify({email: email, password: password}) 
             })
             .then((response) => {
+                console.log(response)
                 return  response.json();
             }).then((data) => {
+                console.log(data)
                 return data
             })
 
         // Je stocke dans une variable le traitement de la promise et je retourne le résultat -> problème : dans le reducer le payload arrive en promise
 
-         let result = testFetch.then((data) => {
-            /*Je parviens à console.log le token ici -> l'objectif serait de lancer le dispacth de l'action connect avec la data en paramètre
-             à ce niveau de traitement de la promise mais la fonction ne se lance pas.
-             */
-            console.log(data.body);
-            return result;
-        })
+
         // Pour le moment j'appelle le dispatch ici mais il devrait se retrouver dans le traitement de la fonction asynchone.
-        dispatch(actions.connect(result)) 
+        
     }
    
 }
 
 const initialState = {
-  token: ""
+  token: "",
+  status: "void"
 }
 
 
@@ -45,7 +42,7 @@ const {actions, reducer } = createSlice({
     name: 'login',
     initialState,
     reducers: {
-        connect: {
+        resolved: {
             prepare: (result) => ({
                 payload: { result }
             }),

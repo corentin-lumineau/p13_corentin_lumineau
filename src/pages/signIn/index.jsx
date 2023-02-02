@@ -1,5 +1,5 @@
 import logoBankTree from '../../assets/argentBankLogo.png'
-import { connect, useDispatch, useStore } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { useState } from 'react'
 import { logUser } from '../../features/signIn'
 
@@ -7,7 +7,7 @@ export default function SignIn() {
     const dispatch = useDispatch()
     const [emailInput, setEmailInput] = useState()
     const [passwordInput, setPasswordInput] = useState()
-    const store = useStore()
+  
 
     const toggleEmailInput = () => {
       const data = document.getElementById('username').value
@@ -51,7 +51,7 @@ export default function SignIn() {
               <div className="input-remember">
                 <input type="checkbox" id="remember-me" /><label>Remember me</label>
               </div>
-              <button className="sign-in-button" onClick={() => store.dispatch(logUser(emailInput, passwordInput))}>Sign In</button>
+              <button className="sign-in-button" onClick={() => dispatch(logUser(emailInput, passwordInput))}>Sign In</button>
             </form>
           </section>
         </main>
