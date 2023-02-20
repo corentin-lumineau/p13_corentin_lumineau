@@ -1,7 +1,9 @@
 import logoBankTree from '../../assets/argentBankLogo.png'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { logUser } from '../../features/signIn'
+import { Navigate } from 'react-router-dom'
+import { selectToken } from '../../utils/selectors'
 
 export default function SignIn() {
     const dispatch = useDispatch()
@@ -18,9 +20,14 @@ export default function SignIn() {
       const data = document.getElementById('password').value
       setPasswordInput(data)
     }
+
+    const token = useSelector(selectToken)
     
     return (
       <div>
+        { token  !== '' ? (
+          <Navigate to="/profile" replace={true} />
+        ) : null }
         <nav className="main-nav">
           <a className="main-nav-logo" href="./index.html">
             <img
@@ -51,7 +58,7 @@ export default function SignIn() {
               <div className="input-remember">
                 <input type="checkbox" id="remember-me" /><label>Remember me</label>
               </div>
-              <button className="sign-in-button" onClick={() => dispatch(logUser(emailInput, passwordInput))}>Sign In</button>
+              <button className="sign-in-button" onClick={(e) => dispatch(logUser(emailInput, passwordInput, e))}>Sign In</button>
             </form>
           </section>
         </main>
