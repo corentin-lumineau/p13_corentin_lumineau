@@ -1,35 +1,46 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { redirect } from 'react-router-dom';
 
 
-/* J'ai pour le moment utilisé la syntaxe ES6 classique du fetch avec la chaîne de fetch pour le traitement asynchrone car je n'arrive pas à faire fonctionner le try/catch qui
-serait pourtant plus simple à gérer et plus lisible */
-export function logUser(email, password) {
-    //Je retourne un thunk pour pouvoir utiliser directement la fonction logUser dans mon composant signin et avoir à disposition le dispatch.
-    
-    return  (dispatch, getState) => {
-      fetch(`http://localhost:3001/api/v1/user/login`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({email: email, password: password}) 
-            })
-            .then((response) => {
-                console.log(response)
-                return  response.json();
-            }).then((data) => {
-                console.log(data)
-                return data
-            })
-
-        // Je stocke dans une variable le traitement de la promise et je retourne le résultat -> problème : dans le reducer le payload arrive en promise
-
-
-        // Pour le moment j'appelle le dispatch ici mais il devrait se retrouver dans le traitement de la fonction asynchone.
-        
+export function logUser(email, password, e) {
+    e.preventDefault();
+    return  async (dispatch, getState) => {
+        try {
+            const response =   await fetch(`http://localhost:3001/api/v1/user/login`, {
+                                method: 'POST',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({email: email, password: password}) 
+                                })
+            const data =  await response.json()
+            dispatch(actions.resolved(data))
+        } catch(error) {
+            dispatch(actions.rejected(error))
+        }
     }
-   
+}
+
+export function signOut(e) {
+    e.preventDefault()
+    return (dispatch, getState) => {
+        const token = getState().login.token
+        if(token !== '') {
+            dispatch(actions.logOut())
+        }
+    }
+    
+}
+
+ export const authMiddleware = (store) => (next) => (action) => {
+  
+/*      if (actions.resolved.match(action)) {
+        localStorage.setItem('isAuthenticated', 'true');
+    } else if (actions.signOut.match(action)) {
+        localStorage.setItem('isAuthenticated', 'false')
+    }  */
+    return next(action)
 }
 
 const initialState = {
@@ -38,7 +49,7 @@ const initialState = {
 }
 
 
-const {actions, reducer } = createSlice({
+const { actions, reducer } = createSlice({
     name: 'login',
     initialState,
     reducers: {
@@ -50,15 +61,26 @@ const {actions, reducer } = createSlice({
                 /*Ici je récupère le résultat de l'action connect dans action.payload (qui est pour le moment une promise donc inutilisable en l'état) 
                 et je met à jour le state token puis je redirige vers la page du user.
                 En cas d'erreur, je renvoie un message d'erreur (pas demandé mais gérable) */
-               debugger;
+               draft.status = 'resolved'
+               draft.token = action.payload.result.body.token
                
             }
         },
         rejected: {
-
+            prepare: (result) => ({
+                payload: { result }
+            }),
+            reducer: (draft, action) => {
+                draft.status = 'rejected'
+            }
+        },
+        logOut: {
+            reducer: (draft, action) => {
+                draft.token = ''
+                draft.status = 'void'
+            }
         }
     }
 })
 
-export const { connect } = actions; 
 export default reducer;

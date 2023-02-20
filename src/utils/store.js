@@ -1,10 +1,16 @@
 import loginReducer from '../features/signIn';
+import userReducer from '../features/user'
 import { configureStore } from '@reduxjs/toolkit';
+import { authMiddleware } from '../features/signIn';
 
-const reduxDevtools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
+
+
 
 export default configureStore({
     reducer: {
-        login: loginReducer
-    }
-}, reduxDevtools);
+        login: loginReducer,
+        userAction: userReducer
+    },
+    middleware: (getDefaultMiddleWare) => getDefaultMiddleWare().concat(authMiddleware)
+});
