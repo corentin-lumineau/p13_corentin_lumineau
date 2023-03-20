@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { logUser } from '../../features/signIn'
 import { Navigate } from 'react-router-dom'
-import { selectToken } from '../../utils/selectors'
+import { selectToken, selectErrorMessage } from '../../utils/selectors'
 
 export default function SignIn() {
     const dispatch = useDispatch()
@@ -22,14 +22,16 @@ export default function SignIn() {
     }
 
     const token = useSelector(selectToken)
+    const errorMessage = useSelector(selectErrorMessage)
     
     return (
-      <div>
-        { token  !== '' ? (
+      <div className='main-wrapper'>
+        { token ? (
           <Navigate to="/profile" replace={true} />
         ) : null }
+        
         <nav className="main-nav">
-          <a className="main-nav-logo" href="./index.html">
+          <a className="main-nav-logo" href="/">
             <img
               className="main-nav-logo-image"
               src={logoBankTree}
@@ -46,6 +48,9 @@ export default function SignIn() {
         </nav>
         <main className="main bg-dark">
           <section className="sign-in-content">
+            { errorMessage ? (
+              <div className='error-message'>{errorMessage}</div>
+            ) : null }
             <i className="fa fa-user-circle sign-in-icon"></i>
             <h1>Sign In</h1>
             <form>

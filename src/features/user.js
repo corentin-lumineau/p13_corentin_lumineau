@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-
-
 export function setUserInformations() {
     return async (dispatch, getState) => {
         const token = getState().login.token
@@ -22,9 +20,34 @@ export function setUserInformations() {
     }
 }
 
+export function editUserInformations(firstName, lastName, e) {
+   
+    e.preventDefault()
+    return async(dispatch, getState) => {
+        const token = getState().login.token
+
+        try {
+            const response = await fetch(`http://localhost:3001/api/v1/user/profile`, {
+                            method: "PUT",
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({firstName: firstName, lastName: lastName}) 
+
+            })
+           
+            const data = await response.json()
+            
+            dispatch(actions.setInformations(data))
+        } catch(error) {
+            console.log(error)
+        }
+    }
+}
+
 const initialState = {
-    email: '',
-    password: '',
     firstName: '',
     lastName: '',
 }
@@ -35,11 +58,14 @@ const {actions, reducer} = createSlice({
     reducers: {
         getInformations: {
             reducer: (draft, action) => {
-                debugger;
-             /*    draft.email = 
-                draft.firstName =
-                draft.lastName =
-                draft.password =  */
+                draft.firstName = action.payload.body.firstName
+                draft.lastName = action.payload.body.lastName
+            }
+        },
+        setInformations: {
+            reducer: (draft, action) => {
+                draft.firstName = action.payload.body.firstName
+                draft.lastName = action.payload.body.lastName
             }
         }
     }

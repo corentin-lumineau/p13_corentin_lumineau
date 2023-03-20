@@ -1,0 +1,36 @@
+.container-edit {
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.edit-inputs label {
+    display: none;
+}
+
+.edit-inputs input {
+    padding: 10px;
+    border: solid 1px grey;
+    color: grey;
+    margin-bottom: 10px;
+}
+
+.edit-user-button {
+    font-weight: bold;
+    padding: 10px;
+    width: 100px;
+    border: solid 1px #B09CF5;
+    color: #B09CF5;
+    background: white;
+  }
+
+  .submit-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+  }
