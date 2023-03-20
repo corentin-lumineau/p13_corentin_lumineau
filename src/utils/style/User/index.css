@@ -1,0 +1,20 @@
+.wrapper-nav {
+    display: flex;
+    gap: 1vw;
+}
+
+.sign-out-button {
+    border: none;
+    background: white;
+    color: #2c3e50;
+    font-weight: bold;
+    padding: unset;
+}
+
+.sign-out-button:hover {
+    cursor: pointer;
+}
+
+.sign-out-icon {
+    transform: scale(1.3);
+}

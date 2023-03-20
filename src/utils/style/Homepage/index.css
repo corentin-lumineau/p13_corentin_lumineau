@@ -1,3 +1,9 @@
+.main-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .main-nav {
     display: flex;
     justify-content: space-between;
@@ -17,6 +23,9 @@
   .main-nav-item {
     text-decoration: none;
     margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1vw;
   }
   
   .main-nav-item:hover {
@@ -225,6 +234,7 @@
   .header {
     color: #fff;
     margin-bottom: 2rem;
+    padding-top: 2rem;
   }
   
   .transaction-button {

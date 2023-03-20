@@ -4,9 +4,6 @@ import chatIcon from '../../assets/icon-chat.png'
 import moneyIcon from '../../assets/icon-money.png'
 import featureIcon from '../../assets/icon-security.png'
 import { Link } from "react-router-dom"
-import { Navigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectToken } from '../../utils/selectors'
 
 function Homepage() {
 
@@ -15,7 +12,7 @@ function Homepage() {
 
     <div>
        <nav className="main-nav">
-      <a className="main-nav-logo" href="./index.html">
+      <a className="main-nav-logo" href="/">
         <img
           className="main-nav-logo-image"
           src={logoBankTree}

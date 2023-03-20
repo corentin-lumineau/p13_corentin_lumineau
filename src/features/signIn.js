@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { redirect } from 'react-router-dom';
-
 
 export function logUser(email, password, e) {
     e.preventDefault();
@@ -33,19 +31,10 @@ export function signOut(e) {
     
 }
 
- export const authMiddleware = (store) => (next) => (action) => {
-  
-/*      if (actions.resolved.match(action)) {
-        localStorage.setItem('isAuthenticated', 'true');
-    } else if (actions.signOut.match(action)) {
-        localStorage.setItem('isAuthenticated', 'false')
-    }  */
-    return next(action)
-}
-
 const initialState = {
   token: "",
-  status: "void"
+  status: "void",
+  errorMessage: ""
 }
 
 
@@ -58,11 +47,12 @@ const { actions, reducer } = createSlice({
                 payload: { result }
             }),
             reducer: (draft, action) => {
-                /*Ici je récupère le résultat de l'action connect dans action.payload (qui est pour le moment une promise donc inutilisable en l'état) 
-                et je met à jour le state token puis je redirige vers la page du user.
-                En cas d'erreur, je renvoie un message d'erreur (pas demandé mais gérable) */
                draft.status = 'resolved'
                draft.token = action.payload.result.body.token
+
+               if(draft.errorMessage !== "") {
+                draft.errorMessage = ""
+               }
                
             }
         },
@@ -70,12 +60,13 @@ const { actions, reducer } = createSlice({
             prepare: (result) => ({
                 payload: { result }
             }),
-            reducer: (draft, action) => {
+            reducer: (draft) => {
                 draft.status = 'rejected'
+                draft.errorMessage = "Nom d'utilisateur ou mot de passe incorrect"
             }
         },
         logOut: {
-            reducer: (draft, action) => {
+            reducer: (draft) => {
                 draft.token = ''
                 draft.status = 'void'
             }
